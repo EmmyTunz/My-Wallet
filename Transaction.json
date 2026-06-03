@@ -1,1 +1,1 @@
-{"Transaction":{"0":{"amount":10000,"type":"Income","date":1780322240784,"note":"Sweet Sensation"},"1":{"amount":20000,"type":"expenses","date":1780322269518,"note":"wWWss"}}}
+{"Transaction":{"0":{"id":0,"amount":100000,"type":"Income","date":"03\/06\/2026 11:56","note":"january's salary"},"1":{"id":1,"amount":10000,"type":"Expense","date":"03\/06\/2026 11:57","note":"food stuffs"},"2":{"id":2,"amount":20000,"type":"Expense","date":"03\/06\/2026 11:57","note":"nepa bill"},"3":{"id":3,"amount":20000,"type":"Expense","date":"03\/06\/2026 11:57","note":"20 gb"}}}
