@@ -17,11 +17,12 @@ try:
                     "id": key["id"],
                     "amount" : key["amount"],
                     "type" : key["type"],
+                    "category": key["category"],
                     "date" : key["date"],
                     "note" : key["note"],
         }})
         # get the transaction ID of the previous transaction and add 1 to it for the next transaction
-        transaction_id = int(list(transaction_file["Transaction"].keys())[len(transaction_file["Transaction"].keys()) - 1]) + 1
+           transaction_id = int(list(transaction_file["Transaction"].keys())[len(transaction_file["Transaction"].keys()) - 1]) + 1
 
 except FileNotFoundError, json.decoder.JSONDecodeError:
     transaction_list = []
@@ -41,6 +42,7 @@ while new_transaction:
             "id": transaction_id,
             "amount" : transaction_amount,
             "type" : transaction_type,
+            "category": category,
             "date" : date.strftime("%d/%m/%Y %H:%M"),
             "note" : note,
         }
@@ -58,12 +60,10 @@ while new_transaction:
 
 # Display Transaction Table
 transaction_table = PrettyTable(["Transaction_ID", "Amount", "Type", "Category", "Date", "Note"])
-# for i in transaction_list:
-
+for i in transaction_list:
+    transaction_table.add_row([i["Transaction"]["id"], i["Transaction"]["amount"], i["Transaction"]["type"], i["Transaction"]["category"], i["Transaction"]["date"], i["Transaction"]["note"]])
+print(transaction_table)
 
 data = pd.DataFrame(transaction_list)
 data.to_json("Transaction.json")
-print(transaction_list)
-print(data)
-
 
