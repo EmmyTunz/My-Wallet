@@ -2,6 +2,12 @@ import pandas as pd
 import json
 from datetime import datetime
 from prettytable import PrettyTable
+from budget_tracker import BudgetTracker
+
+
+
+
+
 
 new_transaction = True
 transaction_list = []
@@ -22,14 +28,14 @@ try:
                     "note" : key["note"],
         }})
         # get the transaction ID of the previous transaction and add 1 to it for the next transaction
-           transaction_id = int(list(transaction_file["Transaction"].keys())[len(transaction_file["Transaction"].keys()) - 1]) + 1
+        transaction_id = int(list(transaction_file["Transaction"].keys())[len(transaction_file["Transaction"].keys()) - 1]) + 1
 
 except FileNotFoundError, json.decoder.JSONDecodeError:
     transaction_list = []
     transaction_id = 0
 
 
-# add transaction to table
+# add new transaction to table
 while new_transaction:
     transaction_amount = int(input("Enter Transaction Amount in digits "))
     transaction_type = input("Enter Transaction Type Income/Expense ").capitalize()
