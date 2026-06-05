@@ -23,7 +23,10 @@ class Transaction:
 # print(keys)
 # print(keys[len(transactions["Transaction"].keys()) - 1])
 
-transaction = [{'Transaction': {'id': 0, 'amount': 100000, 'type': 'Income', 'date': '03/06/2026 11:56', 'note': "january's salary"}}, {'Transaction': {'id': 1, 'amount': 10000, 'type': 'Expense', 'date': '03/06/2026 11:57', 'note': 'food stuffs'}}, {'Transaction': {'id': 2, 'amount': 20000, 'type': 'Expense', 'date': '03/06/2026 11:57', 'note': 'nepa bill'}}, {'Transaction': {'id': 3, 'amount': 20000, 'type': 'Expense', 'date': '03/06/2026 11:57', 'note': '20 gb'}}]
+# transaction = [{'Transaction': {'id': 0, 'amount': 100000, 'type': 'Income', 'date': '03/06/2026 11:56', 'note': "january's salary"}}, {'Transaction': {'id': 1, 'amount': 10000, 'type': 'Expense', 'date': '03/06/2026 11:57', 'note': 'food stuffs'}}, {'Transaction': {'id': 2, 'amount': 20000, 'type': 'Expense', 'date': '03/06/2026 11:57', 'note': 'nepa bill'}}, {'Transaction': {'id': 3, 'amount': 20000, 'type': 'Expense', 'date': '03/06/2026 11:57', 'note': '20 gb'}}]
+#
+# for i in transaction:
+#     print(i["Transaction"]["amount"])
 
-for i in transaction:
-    print(i["Transaction"]["amount"])
+budget = {"budget": 170000, "feeding": 20000, "airtime/data": 10000, "electricity": 15000, "betting": 25000, "transfer": 100000}
+print(list(budget.keys())[1:6])

@@ -2,7 +2,7 @@ import pandas as pd
 import json
 from datetime import datetime
 from prettytable import PrettyTable
-from budget_tracker import BudgetTracker, check_budget
+from budget_tracker import BudgetTracker, check_budget, check_category_limits
 
 # Load existing data from previous sessions.
 transaction_list = []
@@ -84,10 +84,14 @@ elif user_input == "view":
     print(transaction_table)
 
     # get expenses data
+
+    expenses_list = []
     expenses_amount = 0
     for a in transaction_list:
         if a["Transaction"]["type"] == "Expense":
+            expenses_list.append(a)
             expenses_amount += a["Transaction"]["amount"]
+
     # get budget data
     try:
         with open("budget_limits.txt", "r") as budget_data:
@@ -95,5 +99,34 @@ elif user_input == "view":
         # check budget with total expenses
         check_budget(budget_dict=budget_file, total_expenses=expenses_amount)
 
+        # add all transaction within the same category
+        feeding_amount = 0
+        airtime_data_amount = 0
+        electricity_amount = 0
+        betting_amount = 0
+        transfer_amount = 0
+        for category in expenses_list:
+            if category["Transaction"]["category"] == "Feeding":
+                feeding_amount += category["Transaction"]["amount"]
+
+            elif category["Transaction"]["category"] == "Electricity":
+                electricity_amount += category["Transaction"]["amount"]
+
+            elif category["Transaction"]["category"] == "Airtime" or "Data":
+                airtime_data_amount += category["Transaction"]["amount"]
+
+            elif category["Transaction"]["category"] == "Betting":
+                betting_amount += category["Transaction"]["amount"]
+
+            elif category["Transaction"]["category"] == "Transfer":
+                transfer_amount += category["Transaction"]["amount"]
+        # check each category total amount and their limits.
+        category_total_amount_list = [feeding_amount, airtime_data_amount, electricity_amount, betting_amount, transfer_amount]
+
+        for i, j in zip(category_total_amount_list, list(budget_file.keys())[1:6]):
+            check_category_limits(budget_dict=budget_file, category_amount=i, limit=j)
     except FileNotFoundError:
         print("You have not set your Budget or Limits yet")
+
+    # check each category's total amount
+
