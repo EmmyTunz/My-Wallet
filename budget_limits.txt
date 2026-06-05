@@ -1,1 +1,1 @@
-{"budget": 170000, "feeding": 20000, "airtime/data": 10000, "electricity": 15000, "betting": 25000, "transfer": 100000}
+{"budget": 205000, "feeding": 30000, "airtime/data": 20000, "electricity": 25000, "betting": 30000, "transfer": 100000}

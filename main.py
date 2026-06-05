@@ -3,6 +3,12 @@ import json
 from datetime import datetime
 from prettytable import PrettyTable
 from budget_tracker import BudgetTracker, check_budget, check_category_limits
+from balance import BalanceTracker
+
+
+# Load balance
+balance = BalanceTracker()
+
 
 # Load existing data from previous sessions.
 transaction_list = []
@@ -27,6 +33,7 @@ try:
 except FileNotFoundError, json.decoder.JSONDecodeError:
     transaction_list = []
     transaction_id = 0
+    print("Welcome to My wallet!\nstart by setting your budget for the month")
 
 
 
@@ -58,7 +65,17 @@ while user_continue:
                     "note" : note,
                 }
             }
-            transaction_list.append(transaction_dict)
+
+            # update balance and save
+            update = balance.update_balance(new_transaction=transaction_dict)
+            balance.save_balance()
+
+            balance.display_balance()
+            if update:
+                transaction_list.append(transaction_dict)
+            else:
+                print("Enter a valid Transaction (i) ensure Income/Expense is spelt correctly or ii) Fund your wallet")
+
 
             new_transaction = input("New transaction? (True/False) ").capitalize()
             if new_transaction == "False":
@@ -95,7 +112,6 @@ while user_continue:
         print(transaction_table)
 
         # get expenses data
-
         expenses_list = []
         expenses_amount = 0
         for a in transaction_list:
@@ -143,7 +159,3 @@ while user_continue:
         if new_input == "y":
             user_continue = False
             print("Exiting....")
-
-
-
-
