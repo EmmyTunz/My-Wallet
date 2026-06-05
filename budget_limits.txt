@@ -1,0 +1,1 @@
+{"budget": 170000, "feeding": 20000, "airtime/data": 10000, "electricity": 15000, "betting": 25000, "transfer": 100000}

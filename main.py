@@ -2,7 +2,7 @@ import pandas as pd
 import json
 from datetime import datetime
 from prettytable import PrettyTable
-from budget_tracker import BudgetTracker
+from budget_tracker import BudgetTracker, check_budget
 
 # Load existing data from previous sessions.
 transaction_list = []
@@ -33,7 +33,7 @@ except FileNotFoundError, json.decoder.JSONDecodeError:
 
 # ask the user what they want to do
 user_input = input("What would you like to do? enter add(to add a new transaction), set(to set your monthly budget),"
-                   " view(to view transactions and track your budget" ).lower()
+                   " view(to view transactions and track your budget \n").lower()
 
 
 if user_input == "add":
@@ -72,35 +72,28 @@ if user_input == "add":
 # user_input = set.
 elif user_input == "set":
     budget_tracker = BudgetTracker()
-    budget_limit_dict = {
-        "budget": budget_tracker.budget,
-        "feeding": budget_tracker.feeding_limit,
-        "airtime/data": budget_tracker.airtime_data_limit,
-        "electricity": budget_tracker.electricity_limit,
-        "betting": budget_tracker.betting_limit,
-        "transfer": budget_tracker.transfer_limit,
-    }
-    # save budget data
-    with open("budget_limits.txt", "w") as data:
-        json.dump(budget_limit_dict, data)
-
+    budget_tracker.save_budget_data()
 
 
 # user_input = view.
 elif user_input == "view":
     # Display Transaction Table
-    print(transaction_list)
     transaction_table = PrettyTable(["Transaction_ID", "Amount", "Type", "Category", "Date", "Note"])
     for i in transaction_list:
         transaction_table.add_row([i["Transaction"]["id"], i["Transaction"]["amount"], i["Transaction"]["type"], i["Transaction"]["category"], i["Transaction"]["date"], i["Transaction"]["note"]])
     print(transaction_table)
 
+    # get expenses data
+    expenses_amount = 0
+    for a in transaction_list:
+        if a["Transaction"]["type"] == "Expense":
+            expenses_amount += a["Transaction"]["amount"]
     # get budget data
     try:
         with open("budget_limits.txt", "r") as budget_data:
             budget_file = json.load(budget_data)
+        # check budget with total expenses
+        check_budget(budget_dict=budget_file, total_expenses=expenses_amount)
+
     except FileNotFoundError:
         print("You have not set your Budget or Limits yet")
-
-
-
