@@ -1,5 +1,6 @@
 import pandas as pd
 import json
+import os.path
 from datetime import datetime
 from prettytable import PrettyTable
 from budget_tracker import BudgetTracker, check_budget, check_category_limits
@@ -98,8 +99,16 @@ while user_continue:
 
     # user_input = set.
     elif user_input == "set":
-        budget_tracker = BudgetTracker()
-        budget_tracker.save_budget_data()
+        if os.path.exists("budget_limits.txt"):
+            print("You have already set your limits")
+            user_input = input("Do you want to reset it? y/n ").lower()
+            if user_input == "y":
+                budget_tracker = BudgetTracker()
+                budget_tracker.save_budget_data()
+        else:
+            budget_tracker = BudgetTracker()
+            budget_tracker.save_budget_data()
+
         new_input = input("Quit Program? y/n ").lower()
         if new_input == "y":
             user_continue = False
@@ -108,6 +117,8 @@ while user_continue:
 
     # user_input = view.
     elif user_input == "view":
+        # Display  available balance
+        print(f"Balance: N{balance.balance}")
         # Display Transaction Table
         transaction_table = PrettyTable(["Transaction_ID", "Amount", "Type", "Category", "Date", "Note"])
         for i in transaction_list:

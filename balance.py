@@ -2,7 +2,11 @@
 import json
 class BalanceTracker:
     def __init__(self):
-        self.balance = 0
+        try:
+            with open("balance.txt", "r") as balance_data:
+                self.balance = int(balance_data.read())
+        except FileNotFoundError:
+            self.balance = 0
 
     def update_balance(self, new_transaction):
         if new_transaction["Transaction"]["type"] == "Income":
