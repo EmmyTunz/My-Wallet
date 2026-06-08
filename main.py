@@ -81,10 +81,13 @@ while user_continue:
             if new_transaction == "False":
                 new_transaction = False
             elif new_transaction == "True":
-                new_transaction = "True"
+                new_transaction = True
                 transaction_id += 1
             else:
                 new_transaction = input("is there a new transaction? type True or False ").capitalize()
+                if new_transaction == "False":
+                    new_transaction = False
+
         data = pd.DataFrame(transaction_list)
         data.to_json("Transaction.json")
 
@@ -139,7 +142,7 @@ while user_continue:
                 elif category["Transaction"]["category"] == "Electricity":
                     electricity_amount += category["Transaction"]["amount"]
 
-                elif category["Transaction"]["category"] == "Airtime" or "Data":
+                elif category["Transaction"]["category"] in ["Airtime" , "Data"]:
                     airtime_data_amount += category["Transaction"]["amount"]
 
                 elif category["Transaction"]["category"] == "Betting":
