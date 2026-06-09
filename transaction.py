@@ -1,32 +1,54 @@
-class Transaction:
-    def __init__(self):
-        self.amount = 0
-        self.type = 0
-        self.category = 0
-        self.date = 0
-        self.note = ""
+from datetime import datetime
+from balance import BalanceTracker
+import pandas as pd
+import json
 
-    def save_transaction(self):
-        pass
+balance = BalanceTracker()
 
-    def del_transaction(self):
-        pass
+def load_data():
+    transaction_list = []
+    try:
+        with open("Transaction.json", "r") as data_file:
+            transaction_file = json.load(data_file)
+            for key in transaction_file["Transaction"]:
+                key = transaction_file["Transaction"][key]
+                transaction_list.append({
+                    "Transaction": {
+                        "id": key["id"],
+                        "amount": key["amount"],
+                        "type": key["type"],
+                        "category": key["category"],
+                        "date": key["date"],
+                        "note": key["note"],
+                    }})
+        return transaction_list
 
+    except FileNotFoundError, json.decoder.JSONDecodeError:
+        transaction_list = []
+        return transaction_list
 
+def add_transaction(amount, transaction_type, category, note, date=datetime.now()):
+    data = load_data()
+    transaction_dict = {
+                "Transaction": {
+                    "id": data[len(data) - 1]["Transaction"]["id"] + 1,
+                    "amount" : amount,
+                    "type" : transaction_type,
+                    "category": category,
+                    "date" : date.strftime("%d/%m/%Y %H:%M"),
+                    "note" : note,
+                }
+            }
+    update = balance.update_balance(new_transaction=transaction_dict)
+    balance.save_balance()
+    if update:
+        data.append(transaction_dict)
+    return data
 
-# transactions = {"Transaction":{"0":{"amount":10000,"type":"Income","date":1780322240784,"note":"Sweet Sensation"},"1":{"amount":20000,"type":"expenses","date":1780322269518,"note":"wWWss"},"2":{"amount":100000,"type":"Income","date":1780482364566,"note":"thank God"},"3":{"amount":10000,"type":"Expense","date":1780482403690,"note":"Gift data"},"4":{"amount":10000,"type":"Income","date":1780482797304,"note":"May"},"5":{"amount":100000,"type":"expense","date":1780482864701,"note":"benz"},"6":{"amount":2000,"type":"ecpense","date":1780483275806,"note":"eggroll"},"7":{"amount":3000,"type":"expense","date":1780483303549,"note":"gift for sister"}}}
-#
-# del transactions["Transaction"]["1"]
-# print(transactions)
+def save_data(data):
+    data = pd.DataFrame(data)
+    data.to_json("Transaction.json")
 
-# keys = list(transactions["Transaction"].keys())
-# print(keys)
-# print(keys[len(transactions["Transaction"].keys()) - 1])
+# def del_transaction(transaction_id):
+#     data = load_data()
 
-# transaction = [{'Transaction': {'id': 0, 'amount': 100000, 'type': 'Income', 'date': '03/06/2026 11:56', 'note': "january's salary"}}, {'Transaction': {'id': 1, 'amount': 10000, 'type': 'Expense', 'date': '03/06/2026 11:57', 'note': 'food stuffs'}}, {'Transaction': {'id': 2, 'amount': 20000, 'type': 'Expense', 'date': '03/06/2026 11:57', 'note': 'nepa bill'}}, {'Transaction': {'id': 3, 'amount': 20000, 'type': 'Expense', 'date': '03/06/2026 11:57', 'note': '20 gb'}}]
-#
-# for i in transaction:
-#     print(i["Transaction"]["amount"])
-
-budget = {"budget": 170000, "feeding": 20000, "airtime/data": 10000, "electricity": 15000, "betting": 25000, "transfer": 100000}
-print(list(budget.keys())[1:6])

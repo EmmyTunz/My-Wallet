@@ -4,7 +4,7 @@ class BalanceTracker:
     def __init__(self):
         try:
             with open("balance.txt", "r") as balance_data:
-                self.balance = int(balance_data.read())
+                self.balance = float(balance_data.read())
         except FileNotFoundError:
             self.balance = 0
 
