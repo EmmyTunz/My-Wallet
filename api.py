@@ -1,3 +1,4 @@
+from budget_tracker import new_budget, get_budget
 from transaction import *
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
@@ -12,6 +13,14 @@ class Transaction(BaseModel):
     category: str
     date: datetime
     note: str = ""
+
+class Budget(BaseModel):
+    budget: float
+    feeding: float
+    airtime_data: float
+    electricity: float
+    betting: float
+    transfer: float
 
 # Add a new transaction
 @app.post("/transaction/new")
@@ -30,5 +39,17 @@ def create_transaction(tx: Transaction):
 def get_transaction():
     data = load_data()
     return data
+
+# create / check budget and category limits
+@app.post("/budget/new", summary= "Create budget limits")
+def create_budget(bd: Budget):
+    set_budget = new_budget(budget=bd.budget, feeding=bd.feeding, airtime_data=bd.airtime_data, electricity=bd.electricity, betting=bd.betting, transfer=bd.transfer)
+    return set_budget
+# View budget limits
+@app.get("/budget", summary="View Budget limits")
+def view_budget():
+    budget = get_budget()
+    return budget
+
 
 

@@ -49,6 +49,8 @@ def save_data(data):
     data = pd.DataFrame(data)
     data.to_json("Transaction.json")
 
+
+
 # def del_transaction(transaction_id):
 #     data = load_data()
 
