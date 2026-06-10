@@ -45,7 +45,9 @@ def get_budget():
 
 def check_category_limits(limit, category_amount, budget_dict):
     if budget_dict[limit] <= category_amount:
-        print(f"You have exceeded your monthly {limit}, you spent a total of N{category_amount}")
+        return {"message" : f"You have exceeded your monthly {limit}, you spent a total of N{category_amount}"}
+    else:
+        return {"message": f"You still have N{budget_dict[limit] - category_amount} for {limit} to spend"}
 
 
 def check_budget(budget_dict, total_expenses):

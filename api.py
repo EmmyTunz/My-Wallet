@@ -2,6 +2,7 @@ from budget_tracker import new_budget, get_budget
 from transaction import *
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
+from expenses import check_expenses
 
 
 app = FastAPI(title= "Personal Finance Tracker")
@@ -50,6 +51,13 @@ def create_budget(bd: Budget):
 def view_budget():
     budget = get_budget()
     return budget
+# compare category limits with expenses
+@app.get("/budget/category_limits", summary="Check category limits")
+def check_limits():
+    trans_list = get_transaction()
+    budget_data = get_budget()
+    expenses_check = check_expenses(transaction_list=trans_list, budget_file=budget_data)
+    return expenses_check
 
 
 
