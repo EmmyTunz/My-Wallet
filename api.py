@@ -2,9 +2,9 @@ from budget_tracker import new_budget, get_budget, check_budget
 from transaction import *
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from expenses import check_expenses, total_expenses
+from expenses import check_expenses, total_expenses, expenses_list_func, calculate_categories
 from savings_tracker import *
-from datetime import datetime
+from monthly_summary import *
 
 app = FastAPI(title= "Personal Finance Tracker")
 
@@ -33,6 +33,8 @@ class Contribution(BaseModel):
     amount: float
     date: datetime
 
+class MonthlyReport(BaseModel):
+    month: int
 
 # Add a new transaction
 @app.post("/transaction/new")
@@ -67,9 +69,10 @@ def view_budget():
 def check_limits():
     trans_list = get_transaction()
     budget_data = get_budget()
-    expenses = total_expenses(transaction_list=trans_list)
-    budget_check = check_budget(budget_dict=budget_data, total_expenses= expenses)
-    expenses_check = check_expenses(transaction_list=trans_list, budget_file=budget_data)
+    expenses_list = expenses_list_func(trans_list)
+    expenses_amount = total_expenses(transaction_list=trans_list)
+    budget_check = check_budget(budget_dict=budget_data, total_expenses= expenses_amount)
+    expenses_check = check_expenses(expenses_list=expenses_list, budget_file=budget_data)
     return budget_check, expenses_check
 
 
@@ -117,6 +120,33 @@ def savings_per_day():
 
 
 # Monthly Summary
+## - Generate Monthly summary for any given month
+@app.post("/monthly_summary", summary="Request Monthly summary for a specified month")
+def generate_report(mr: MonthlyReport):
+    savings_data = load_savings()
+    trans_data = load_data()
+
+    monthly_transaction_list = arrange_transaction_data(transaction_list=trans_data, month=mr.month)
+    total_income = calculate_total_income(monthly_transaction_list)
+
+    expense_list = expenses_list_func(transaction_list=monthly_transaction_list)
+    total_expense = total_expenses(transaction_list=expense_list)
+
+    net_balance = total_income - total_expense
+
+    biggest_expense = biggest_expense_func(expense_list)
+
+    categories_list = calculate_categories(expense_list)
+    top_categories = check_top_categories(categories_list)
+
+    savings_data_list = get_savings_data(savings_data, mr.month)
+    savings_rate = calculate_savings_rate(savings_data_list, total_income)
+
+    generate_monthly_report = create_monthly_report(total_income, total_expense, net_balance, top_categories, biggest_expense, savings_rate)
+    return generate_monthly_report
+
+
+
 
 
 

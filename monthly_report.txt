@@ -1,0 +1,21 @@
+{
+  "total_income": 130000.0,
+  "total_expense": 24700.0,
+  "net_balance": 105300.0,
+  "top_categories": {
+    "betting_amount": 20000,
+    "feeding_amount": 1400,
+    "transfer_amount": 300
+  },
+  "biggest_expense": {
+    "Transaction": {
+      "id": 2,
+      "amount": 20000,
+      "type": "Expense",
+      "category": "Betting",
+      "date": "05/06/2026 16:59",
+      "note": "sporty"
+    }
+  },
+  "savings_rate": 30.0
+}
