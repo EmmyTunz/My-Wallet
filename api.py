@@ -1,9 +1,10 @@
-from budget_tracker import new_budget, get_budget
+from budget_tracker import new_budget, get_budget, check_budget
 from transaction import *
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from expenses import check_expenses
-
+from expenses import check_expenses, total_expenses
+from savings_tracker import *
+from datetime import datetime
 
 app = FastAPI(title= "Personal Finance Tracker")
 
@@ -22,6 +23,16 @@ class Budget(BaseModel):
     electricity: float
     betting: float
     transfer: float
+
+class Savings(BaseModel):
+    name: str
+    target_amount: float
+    deadline: str
+
+class Contribution(BaseModel):
+    amount: float
+    date: datetime
+
 
 # Add a new transaction
 @app.post("/transaction/new")
@@ -56,8 +67,57 @@ def view_budget():
 def check_limits():
     trans_list = get_transaction()
     budget_data = get_budget()
+    expenses = total_expenses(transaction_list=trans_list)
+    budget_check = check_budget(budget_dict=budget_data, total_expenses= expenses)
     expenses_check = check_expenses(transaction_list=trans_list, budget_file=budget_data)
-    return expenses_check
+    return budget_check, expenses_check
+
+
+# Savings Tracker
+
+## - create savings
+@app.post("/savings/new", summary="Create new savings")
+def new_savings(sn: Savings):
+    savings_new = create_savings(name=sn.name, target_amount=sn.target_amount, deadline=sn.deadline)
+    return savings_new
+
+## - view savings
+@app.get("/savings", summary="View savings")
+def view_savings():
+    load = load_savings()
+    return load
+
+## - log savings
+@app.post("/savings/log", summary="Add to savings")
+def log_savings(cd: Contribution):
+    savings_data = load_savings()
+    contribution_log = log_contributions(savings_data, cd.amount, cd.date)
+    return contribution_log
+
+## - find out amount remaining to reach saving goal
+@app.get("/savings/amount_remaining", summary="find out how much is left till savings goal")
+def amount_remaining():
+    savings_data = load_savings()
+    calculate_amount = calculate_amount_remaining(savings_data)
+    return calculate_amount
+
+## - find out how many days left to reach goal
+@app.get("/savings/days_left", summary="find out how many days left to reach goal")
+def days_left():
+    data = load_savings()
+    days_l = days_remaining(data)
+    return {"message": f"you have {days_l} days left to reach your savings goal"}
+
+## - find out much to save per day
+@app.get("/savings/amount_per_day", summary="find out much to save per day")
+def savings_per_day():
+    data = load_savings()
+    amount = amount_per_day(data)
+    return {"message": f"You have to save N{amount:.2f} everyday to reach your goal"}
+
+
+# Monthly Summary
+
 
 
 

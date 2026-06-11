@@ -51,14 +51,11 @@ def check_category_limits(limit, category_amount, budget_dict):
 
 
 def check_budget(budget_dict, total_expenses):
-    print(f"Your total budget is N{budget_dict["budget"]}.")
-    print(f"You have spent a total of N{total_expenses}.")
     amount_remaining = budget_dict["budget"] - total_expenses
-    print(f"You have N{amount_remaining} left to spend.")
-    if total_expenses > (80/100) * budget_dict["budget"]:
-        print("Warning! You have now spent 80% of your Monthly budget!")
+    if total_expenses >= (80/100) * budget_dict["budget"]:
+        return {"message": f"You have now spent at least 80%; N{total_expenses} of your budget, N{amount_remaining} left."}
     else:
-        pass
+        return {"message": f"N{total_expenses} spent, You are still within your budget and you have {amount_remaining} left"}
 
 
 

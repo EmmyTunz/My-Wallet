@@ -2,7 +2,6 @@ from budget_tracker import check_category_limits
 
 def check_expenses(transaction_list, budget_file):
     expenses_list = []
-    expenses_amount = 0
     feeding_amount = 0
     airtime_data_amount = 0
     electricity_amount = 0
@@ -12,7 +11,6 @@ def check_expenses(transaction_list, budget_file):
     for a in transaction_list:
         if a["Transaction"]["type"] == "Expense":
             expenses_list.append(a)
-            expenses_amount += a["Transaction"]["amount"]
 
     # add all transaction within the same category
     for category in expenses_list:
@@ -38,6 +36,13 @@ def check_expenses(transaction_list, budget_file):
         check = check_category_limits(budget_dict=budget_file, category_amount=i, limit=j)
         messages.append(check)
     return messages
+
+def total_expenses(transaction_list):
+    expenses_amount = 0
+    for a in transaction_list:
+        if a["Transaction"]["type"] == "Expense":
+            expenses_amount += a["Transaction"]["amount"]
+    return expenses_amount
 
 
 
