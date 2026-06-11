@@ -145,8 +145,11 @@ def generate_report(mr: MonthlyReport):
     generate_monthly_report = create_monthly_report(total_income, total_expense, net_balance, top_categories, biggest_expense, savings_rate)
     return generate_monthly_report
 
-
-
+## - view the generated report
+@app.get("/monthly_summary/view", summary="View generated report")
+def view_report():
+    report = get_report()
+    return report
 
 
 

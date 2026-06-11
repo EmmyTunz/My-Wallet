@@ -70,3 +70,13 @@ def create_monthly_report(total_income, total_expenses, net_balance, top_categor
         json.dump(monthly_report, data, indent=2)
 
     return {"message": "Monthly report has been generated"}
+
+## - get generated report
+def get_report():
+    try:
+        with open("monthly_report.txt", "r") as data:
+            report = json.load(data)
+        return report
+
+    except FileNotFoundError:
+        return {"message": "You have not requested a report yet"}
