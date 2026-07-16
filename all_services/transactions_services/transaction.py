@@ -2,13 +2,15 @@ from datetime import datetime
 from all_services.balance_services.balance import BalanceTracker
 import pandas as pd
 import json
+import os
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 balance = BalanceTracker()
 
 def load_data():
     transaction_list = []
     try:
-        with open("Transaction.json", "r") as data_file:
+        with open(os.path.join(BASE_DIR, "Transaction.json"), "r") as data_file:
             transaction_file = json.load(data_file)
             for key in transaction_file["Transaction"]:
                 key = transaction_file["Transaction"][key]
@@ -23,7 +25,7 @@ def load_data():
                     }})
         return transaction_list
 
-    except FileNotFoundError, json.decoder.JSONDecodeError:
+    except (FileNotFoundError, json.decoder.JSONDecodeError):
         transaction_list = []
         return transaction_list
 
@@ -47,7 +49,7 @@ def add_transaction(amount, transaction_type, category, note, date=datetime.now(
 
 def save_data(data):
     data = pd.DataFrame(data)
-    data.to_json("Transaction.json")
+    data.to_json(os.path.join(BASE_DIR, "Transaction.json"))
 
 
 

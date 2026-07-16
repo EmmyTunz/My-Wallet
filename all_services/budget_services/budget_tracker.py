@@ -1,6 +1,7 @@
 import json
 import os.path
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 class BudgetTracker:
     def __init__(self):
@@ -19,7 +20,7 @@ class BudgetTracker:
 
 
 def new_budget(budget, feeding, airtime_data, electricity, betting, transfer):
-    if os.path.exists("budget_limits.txt"):
+    if os.path.exists(os.path.join(BASE_DIR, "budget_limits.txt")):
         return {"Message" : "You have budget limits already, view or edit them"}
     else:
         budget_limit_dict = {
@@ -37,7 +38,7 @@ def new_budget(budget, feeding, airtime_data, electricity, betting, transfer):
 
 def get_budget():
     try:
-        with open("budget_limits.txt", "r") as budget_data:
+        with open(os.path.join(BASE_DIR, "budget_limits.txt"), "r") as budget_data:
             budget_file = json.load(budget_data)
             return budget_file
     except FileNotFoundError:

@@ -1,5 +1,8 @@
 from datetime import datetime, date
 import json
+import os
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 def create_savings(name, target_amount, deadline):
     savings_data = {
@@ -8,7 +11,7 @@ def create_savings(name, target_amount, deadline):
         "deadline": deadline,
         "contributions": []
     }
-    with open("savings.json", "w") as data:
+    with open(os.path.join(BASE_DIR, "savings.json"), "w") as data:
         json.dump(savings_data, data, indent=4)
 
     return {"message": "Savings goal created successfully."}
@@ -28,7 +31,7 @@ def log_contributions(savings_data, amount, date_log):
         "date" : date_log.strftime("%d/%m/%Y %H:%M")
     }
     savings_data["contributions"].append(contribution)
-    with open("savings.json", "w") as data:
+    with open(os.path.join(BASE_DIR, "savings.json"), "w") as data:
         json.dump(savings_data, data, indent=4)
 
     return {"message": f"Good Job! you just saved N{amount}."}

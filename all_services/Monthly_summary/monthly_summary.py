@@ -1,6 +1,9 @@
 import json
+import os
 from datetime import datetime
 # View report for each month
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 ## - gather all transaction from a single month into one list
 def arrange_transaction_data(transaction_list, month):
@@ -66,7 +69,7 @@ def create_monthly_report(total_income, total_expenses, net_balance, top_categor
         "biggest_expense": biggest_expense,
         "savings_rate": savings_rate,
     }
-    with open("monthly_report.txt", "w") as data:
+    with open(os.path.join(BASE_DIR, "monthly_report.txt"), "w") as data:
         json.dump(monthly_report, data, indent=2)
 
     return {"message": "Monthly report has been generated"}
@@ -74,7 +77,7 @@ def create_monthly_report(total_income, total_expenses, net_balance, top_categor
 ## - get generated report
 def get_report():
     try:
-        with open("monthly_report.txt", "r") as data:
+        with open(os.path.join(BASE_DIR, "monthly_report.txt"), "r") as data:
             report = json.load(data)
         return report
 

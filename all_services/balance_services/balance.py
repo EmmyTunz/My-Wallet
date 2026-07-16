@@ -1,9 +1,13 @@
 # this file will be used for the balance logic
 import json
+import os
+
+BASE_URL = os.path.dirname(os.path.abspath(__file__))
+
 class BalanceTracker:
     def __init__(self):
         try:
-            with open("balance.txt", "r") as balance_data:
+            with open(os.path.join(BASE_URL, "balance.txt"), "r") as balance_data:
                 self.balance = float(balance_data.read())
         except FileNotFoundError:
             self.balance = 0
@@ -25,7 +29,7 @@ class BalanceTracker:
 
 
     def save_balance(self):
-        with open("balance.txt", "w") as balance_data:
+        with open(os.path.join(BASE_URL, "balance.txt"), "w") as balance_data:
             json.dump(self.balance, balance_data)
 
     def display_balance(self):
