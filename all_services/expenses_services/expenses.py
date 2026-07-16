@@ -1,4 +1,4 @@
-from budget_tracker import check_category_limits
+from all_services.budget_services.budget_tracker import check_category_limits
 
 def expenses_list_func(transaction_list):
     expenses_list = []
