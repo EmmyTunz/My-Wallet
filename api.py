@@ -5,6 +5,7 @@ from pydantic import BaseModel
 from all_services.expenses_services.expenses import check_expenses, total_expenses, expenses_list_func, calculate_categories
 from all_services.savings_services.savings_tracker import *
 from all_services.Monthly_summary.monthly_summary import *
+from all_services.balance_services.balance import *
 
 app = FastAPI(title= "Personal Finance Tracker")
 
@@ -35,6 +36,12 @@ class Contribution(BaseModel):
 
 class MonthlyReport(BaseModel):
     month: int
+
+# Display Balance
+@app.get("/balance", summary="Display current balance")
+def display_balance():
+    current_balance = BalanceTracker()
+    return current_balance.display_balance()
 
 # Add a new transaction
 @app.post("/transaction/new")

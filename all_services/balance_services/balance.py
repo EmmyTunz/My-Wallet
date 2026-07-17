@@ -33,4 +33,4 @@ class BalanceTracker:
             json.dump(self.balance, balance_data)
 
     def display_balance(self):
-        print(f"Balance: N{self.balance}")
+        return self.balance
