@@ -10,11 +10,9 @@ from all_services.balance_services.balance import *
 app = FastAPI(title= "Personal Finance Tracker")
 
 class Transaction(BaseModel):
-    id: int
     amount: float
     type: str
     category: str
-    date: datetime
     note: str = ""
 
 class Budget(BaseModel):
@@ -47,7 +45,7 @@ def display_balance():
 @app.post("/transaction/new")
 def create_transaction(tx: Transaction):
     data = load_data()
-    result = add_transaction(amount=tx.amount, transaction_type=tx.type, category=tx.category, note=tx.note, date=tx.date)
+    result = add_transaction(amount=tx.amount, transaction_type=tx.type, category=tx.category, note=tx.note)
     save_data(result)
     if data == result:
         raise HTTPException(status_code=501, detail= "Please specify the transaction type; Expense or Income")
