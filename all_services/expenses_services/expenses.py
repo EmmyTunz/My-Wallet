@@ -48,7 +48,7 @@ def check_expenses(expenses_list, budget_file):
 
 
 
-
+# calculate total expenses
 def total_expenses(transaction_list):
     expenses_amount = 0
     for a in transaction_list:

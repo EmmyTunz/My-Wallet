@@ -6,6 +6,7 @@ from all_services.expenses_services.expenses import check_expenses, total_expens
 from all_services.savings_services.savings_tracker import *
 from all_services.Monthly_summary.monthly_summary import *
 from all_services.balance_services.balance import *
+from all_services.income_services.income import calculate_total_income
 
 app = FastAPI(title= "Personal Finance Tracker")
 
@@ -35,11 +36,24 @@ class Contribution(BaseModel):
 class MonthlyReport(BaseModel):
     month: int
 
-# Display Balance
+# Display Balance, total_income
 @app.get("/balance", summary="Display current balance")
 def display_balance():
     current_balance = BalanceTracker()
     return current_balance.display_balance()
+
+@app.get("/total_income", summary="Display total income")
+def display_total_income():
+    transaction_list = load_data()
+    total_income = calculate_total_income(transaction_list=transaction_list)
+    return total_income
+
+@app.get("/total_expenses", summary="Display total expenses")
+def display_total_expenses():
+    transaction_list = load_data()
+    total_expenditure = total_expenses(transaction_list=transaction_list)
+    return total_expenditure
+
 
 # Add a new transaction
 @app.post("/transaction/new")
