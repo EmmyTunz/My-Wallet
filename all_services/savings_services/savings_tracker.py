@@ -1,29 +1,45 @@
 from datetime import datetime, date
 import json
 import os
+import pandas as pd
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-def create_savings(name, target_amount, deadline):
-    savings_data = {
-        "name": name,
-        "target_amount": target_amount,
-        "deadline": deadline,
-        "contributions": []
-    }
-    with open(os.path.join(BASE_DIR, "savings.json"), "w") as data:
-        json.dump(savings_data, data, indent=4)
+def load_savings():
+    savings_goal_list = []
+    try:
+        with open(os.path.join(BASE_DIR, "savings.json"), "r") as data:
+            savings_data = json.load(data)
+            for key in savings_data["saving_goals"]:
+                goal = savings_data["saving_goals"][key]
+                savings_goal_list.append({
+                    "saving_goals": {
+                    "name": goal["name"],
+                    "target_amount": goal["target_amount"],
+                    "deadline": goal["deadline"],
+                    "contributions": goal["contributions"]
+                }})
+        return savings_goal_list
+    except (FileNotFoundError, json.decoder.JSONDecodeError):
+        return savings_goal_list
 
+def create_savings(name, target_amount, deadline):
+    saving_goals_data = load_savings()
+    savings_data = {
+        "saving_goals": {
+            "name": name,
+            "target_amount": target_amount,
+            "deadline": deadline,
+            "contributions": []
+        }
+    }
+    saving_goals_data.append(savings_data)
+    save_savings_data(saving_goals_data)
     return {"message": "Savings goal created successfully."}
 
-
-def load_savings():
-    try:
-        with open("savings.json") as data:
-            savings_data = json.load(data)
-        return savings_data
-    except FileNotFoundError:
-        return {"message" : "You have no savings, create one"}
+def save_savings_data(data):
+    data = pd.DataFrame(data)
+    data.to_json(os.path.join(BASE_DIR, "savings.json"))
 
 def log_contributions(savings_data, amount, date_log):
     contribution = {

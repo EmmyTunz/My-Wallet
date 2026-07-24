@@ -76,7 +76,8 @@ def get_transaction():
 # create / check budget and category limits
 @app.post("/budget/new", summary= "Create budget limits")
 def create_budget(bd: Budget):
-    set_budget = new_budget(budget=bd.budget, feeding=bd.feeding, airtime_data=bd.airtime_data, electricity=bd.electricity, betting=bd.betting, transfer=bd.transfer)
+    set_budget = new_budget(budget=bd.budget, feeding=bd.feeding, airtime_data=bd.airtime_data, electricity=bd.electricity,
+                            betting=bd.betting, transfer=bd.transfer)
     return set_budget
 # View budget limits
 @app.get("/budget", summary="View Budget limits")
