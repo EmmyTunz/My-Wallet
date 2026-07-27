@@ -32,6 +32,7 @@ class Savings(BaseModel):
 class Contribution(BaseModel):
     amount: float
     date: datetime
+    savings_name: str
 
 class MonthlyReport(BaseModel):
     month: int
@@ -113,8 +114,7 @@ def view_savings():
 ## - log savings
 @app.post("/savings/log", summary="Add to savings")
 def log_savings(cd: Contribution):
-    savings_data = load_savings()
-    contribution_log = log_contributions(savings_data, cd.amount, cd.date)
+    contribution_log = log_contributions(cd.amount, cd.date, cd.savings_name)
     return contribution_log
 
 ## - find out amount remaining to reach saving goal

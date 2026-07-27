@@ -19,7 +19,6 @@ class BalanceTracker:
 
         elif new_transaction["Transaction"]["type"] == "Expense":
             if self.balance < new_transaction["Transaction"]["amount"]:
-                print("Insufficient Funds! Transaction declined")
                 return False
 
             else:
@@ -34,3 +33,8 @@ class BalanceTracker:
 
     def display_balance(self):
         return self.balance
+
+    # def remove_savings_from_balance(self, log_contribution):
+    def remove_savings_from_balance(self, amount):
+        self.balance -= amount
+

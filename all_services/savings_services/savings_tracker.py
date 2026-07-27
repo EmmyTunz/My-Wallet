@@ -2,9 +2,12 @@ from datetime import datetime, date
 import json
 import os
 import pandas as pd
+from all_services.balance_services.balance import BalanceTracker
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+balance = BalanceTracker()
 
+## Load saving goals data from savings.json
 def load_savings():
     savings_goal_list = []
     try:
@@ -23,6 +26,7 @@ def load_savings():
     except (FileNotFoundError, json.decoder.JSONDecodeError):
         return savings_goal_list
 
+## create new saving goal
 def create_savings(name, target_amount, deadline):
     saving_goals_data = load_savings()
     savings_data = {
@@ -37,20 +41,32 @@ def create_savings(name, target_amount, deadline):
     save_savings_data(saving_goals_data)
     return {"message": "Savings goal created successfully."}
 
+## save savings data to savings.json
 def save_savings_data(data):
     data = pd.DataFrame(data)
     data.to_json(os.path.join(BASE_DIR, "savings.json"))
 
-def log_contributions(savings_data, amount, date_log):
-    contribution = {
-        "amount" : amount,
-        "date" : date_log.strftime("%d/%m/%Y %H:%M")
-    }
-    savings_data["contributions"].append(contribution)
-    with open(os.path.join(BASE_DIR, "savings.json"), "w") as data:
-        json.dump(savings_data, data, indent=4)
+## add money to individual saving goal
+def log_contributions(amount, date_log, saving_goal_name):
+    saving_goals_data = load_savings()
+    for i in saving_goals_data:
+        saving_goal = i["saving_goals"]
+        if saving_goal["name"] == saving_goal_name:
+            if amount > 0:
+                contribution = {
+                    "amount" : amount,
+                    "date" : date_log.strftime("%d/%m/%Y %H:%M")
+                }
+                saving_goal["contributions"].append(contribution)
+                save_savings_data(saving_goals_data)
+                balance.remove_savings_from_balance(amount)
+                balance.save_balance()
+                return {"message": f"Good Job! you just added N{amount} to {saving_goal["name"]}."}
+            break
+        else:
+            pass
+    return None
 
-    return {"message": f"Good Job! you just saved N{amount}."}
 
 def calculate_amount_remaining(savings_data):
     amount = 0
