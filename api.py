@@ -34,6 +34,9 @@ class Contribution(BaseModel):
     date: datetime
     savings_name: str
 
+class SavingsPlan(BaseModel):
+    saving_plan: str
+
 class MonthlyReport(BaseModel):
     month: int
 
@@ -118,24 +121,24 @@ def log_savings(cd: Contribution):
     return contribution_log
 
 ## - find out amount remaining to reach saving goal
-@app.get("/savings/amount_remaining", summary="find out how much is left till savings goal")
-def amount_remaining():
-    savings_data = load_savings()
-    calculate_amount = calculate_amount_remaining(savings_data)
+@app.post("/savings/amount_remaining", summary="find out how much is left till savings goal")
+def amount_remaining(sp: SavingsPlan):
+    calculate_amount = calculate_amount_remaining(sp.saving_plan)
     return calculate_amount
 
 ## - find out how many days left to reach goal
-@app.get("/savings/days_left", summary="find out how many days left to reach goal")
-def days_left():
-    data = load_savings()
-    days_l = days_remaining(data)
-    return {"message": f"you have {days_l} days left to reach your savings goal"}
+@app.post("/savings/days_left", summary="find out how many days left to reach goal")
+def days_left(sp: SavingsPlan):
+    days_l = days_remaining(sp.saving_plan)
+    if isinstance(days_l, int):
+        return {"message": f"you have {days_l} days left to reach your savings goal"}
+    else:
+        return days_l
 
 ## - find out much to save per day
-@app.get("/savings/amount_per_day", summary="find out much to save per day")
-def savings_per_day():
-    data = load_savings()
-    amount = amount_per_day(data)
+@app.post("/savings/amount_per_day", summary="find out much to save per day")
+def savings_per_day(sp: SavingsPlan):
+    amount = amount_per_day(sp.saving_plan)
     return {"message": f"You have to save N{amount:.2f} everyday to reach your goal"}
 
 

@@ -68,23 +68,50 @@ def log_contributions(amount, date_log, saving_goal_name):
     return None
 
 
-def calculate_amount_remaining(savings_data):
+def calculate_amount_remaining(savings_plan):
+    savings_data = load_savings()
     amount = 0
-    for i in savings_data["contributions"]:
-        amount += i["amount"]
-    amount_remaining = savings_data["target_amount"] - amount
-    return amount_remaining
+    for i in savings_data:
+        if i["saving_goals"]["name"] == savings_plan:
+            for j in i["saving_goals"]["contributions"]:
+               amount += j["amount"]
+            amount_remaining = i["saving_goals"]["target_amount"] - amount
+            if amount_remaining > 0:
+                return amount_remaining
+            else:
+                return {"message": f"You have reached your {savings_plan} goal!"}
 
-def days_remaining(savings_data):
-    deadline = datetime.strptime(savings_data["deadline"], "%d/%m/%Y").date()
-    today = date.today()
-    days_left = (deadline - today).days
+        else:
+            pass
+    return None
+
+
+
+def days_remaining(savings_plan):
+    savings_data = load_savings()
+    days_left = None
+    for i in savings_data:
+        if i["saving_goals"]["name"] == savings_plan:
+            deadline = datetime.strptime(i["saving_goals"]["deadline"], "%d/%m/%Y").date()
+            today = date.today()
+            days_left = (deadline - today).days
+            if days_left > 0:
+                return days_left
+            else:
+                return {"message": f"You have reached your {savings_plan} deadline!"}
     return days_left
 
-def amount_per_day(savings_data):
-    total_amount = savings_data["target_amount"]
-    no_of_days = days_remaining(savings_data)
-    amount_day = total_amount / no_of_days
+
+def amount_per_day(savings_plan):
+    savings_data = load_savings()
+    amount_day = None
+    for i in savings_data:
+        if i["saving_goals"]["name"] == savings_plan:
+            total_amount = i["saving_goals"]["target_amount"]
+            deadline = datetime.strptime(i["saving_goals"]["deadline"], "%d/%m/%Y").date()
+            today = date.today()
+            no_of_days = (deadline - today).days
+            amount_day = total_amount / no_of_days
     return amount_day
 
 
