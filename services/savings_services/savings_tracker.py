@@ -2,7 +2,7 @@ from datetime import datetime, date
 import json
 import os
 import pandas as pd
-from all_services.balance_services.balance import BalanceTracker
+from services.balance_services.balance import BalanceTracker
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 balance = BalanceTracker()

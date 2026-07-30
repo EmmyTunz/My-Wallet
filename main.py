@@ -3,8 +3,8 @@ import json
 import os.path
 from datetime import datetime
 from prettytable import PrettyTable
-from all_services.budget_services.budget_tracker import BudgetTracker, check_budget, check_category_limits
-from all_services.balance_services.balance import BalanceTracker
+from services.budget_services.budget_tracker import BudgetTracker, check_budget, check_category_limits
+from services.balance_services.balance import BalanceTracker
 
 
 # Load balance
@@ -14,7 +14,7 @@ balance = BalanceTracker()
 # Load existing data from previous sessions.
 transaction_list = []
 try:
-    with open("all_services/transactions_services/Transaction.json", "r") as data_file:
+    with open("services/transactions_services/Transaction.json", "r") as data_file:
         transaction_file = json.load(data_file)
         for key in transaction_file["Transaction"]:
             key = transaction_file["Transaction"][key]
@@ -99,7 +99,7 @@ while user_continue:
 
     # user_input = set.
     elif user_input == "set":
-        if os.path.exists("all_services/budget_services/budget_limits.txt"):
+        if os.path.exists("services/budget_services/budget_limits.txt"):
             print("You have already set your limits")
             user_input = input("Do you want to reset it? y/n ").lower()
             if user_input == "y":
@@ -135,7 +135,7 @@ while user_continue:
 
         # get budget data
         try:
-            with open("all_services/budget_services/budget_limits.txt", "r") as budget_data:
+            with open("services/budget_services/budget_limits.txt", "r") as budget_data:
                 budget_file = json.load(budget_data)
             # check budget with total expenses
             check_budget(budget_dict=budget_file, total_expenses=expenses_amount)

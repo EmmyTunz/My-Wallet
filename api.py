@@ -1,12 +1,12 @@
-from all_services.budget_services.budget_tracker import new_budget, get_budget, check_budget
-from all_services.transactions_services.transaction import *
+from services.budget_services.budget_tracker import new_budget, get_budget, check_budget
+from services.transactions_services.transaction import *
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from all_services.expenses_services.expenses import check_expenses, total_expenses, expenses_list_func, calculate_categories
-from all_services.savings_services.savings_tracker import *
-from all_services.Monthly_summary.monthly_summary import *
-from all_services.balance_services.balance import *
-from all_services.income_services.income import calculate_total_income
+from services.expenses_services.expenses import check_expenses, total_expenses, expenses_list_func, calculate_categories
+from services.savings_services.savings_tracker import *
+from services.Monthly_summary.monthly_summary import *
+from services.balance_services.balance import *
+from services.income_services.income import calculate_total_income
 
 app = FastAPI(title= "Personal Finance Tracker")
 

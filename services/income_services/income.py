@@ -1,4 +1,4 @@
-from all_services.transactions_services.transaction import load_data
+from services.transactions_services.transaction import load_data
 
 
 ## - calculate the total income in that month

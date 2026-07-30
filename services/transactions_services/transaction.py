@@ -1,5 +1,5 @@
 from datetime import datetime
-from all_services.balance_services.balance import BalanceTracker
+from services.balance_services.balance import BalanceTracker
 import pandas as pd
 import json
 import os
